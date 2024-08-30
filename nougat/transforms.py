@@ -150,7 +150,7 @@ train_transform = alb_wrapper(
                         p=1,
                         alpha=50,
                         sigma=120 * 0.1,
-                        alpha_affine=120 * 0.01,
+                        alpha_affine=None,
                         border_mode=0,
                         value=(255, 255, 255),
                     ),
