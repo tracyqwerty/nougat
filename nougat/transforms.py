@@ -48,7 +48,8 @@ class Erosion(alb.ImageOnlyTransform):
 
     def apply(self, img, **params):
         kernel = cv2.getStructuringElement(
-            cv2.MORPH_ELLIPSE, tuple(np.random.randint(self.scale[0], self.scale[1], 2))
+            cv2.MORPH_ELLIPSE, tuple(np.random.randint(
+                self.scale[0], self.scale[1], 2))
         )
         img = cv2.erode(img, kernel, iterations=1)
         return img
@@ -82,7 +83,8 @@ class Dilation(alb.ImageOnlyTransform):
 
     def apply(self, img, **params):
         kernel = cv2.getStructuringElement(
-            cv2.MORPH_ELLIPSE, tuple(np.random.randint(self.scale[0], self.scale[1], 2))
+            cv2.MORPH_ELLIPSE, tuple(np.random.randint(
+                self.scale[0], self.scale[1], 2))
         )
         img = cv2.dilate(img, kernel, iterations=1)
         return img
@@ -120,7 +122,8 @@ train_transform = alb_wrapper(
         [
             Bitmap(p=0.05),
             alb.OneOf([Erosion((2, 3)), Dilation((2, 3))], p=0.02),
-            alb.Affine(shear={"x": (0, 3), "y": (-3, 0)}, cval=(255, 255, 255), p=0.03),
+            alb.Affine(shear={"x": (0, 3), "y": (-3, 0)},
+                       cval=(255, 255, 255), p=0.03),
             alb.ShiftScaleRotate(
                 shift_limit_x=(0, 0.04),
                 shift_limit_y=(0, 0.03),
@@ -143,7 +146,7 @@ train_transform = alb_wrapper(
                     alb.Affine(
                         translate_px=(0, 5), always_apply=True, cval=(255, 255, 255)
                     ),
-                    alb.ElasticTransform(
+                    alb.ElasticTransform in transforms.py(
                         p=1,
                         alpha=50,
                         sigma=120 * 0.1,
