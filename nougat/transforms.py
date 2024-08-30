@@ -146,7 +146,8 @@ train_transform = alb_wrapper(
                     alb.Affine(
                         translate_px=(0, 5), always_apply=True, cval=(255, 255, 255)
                     ),
-                    alb.ElasticTransform in transforms.py (p=1, alpha=50, sigma=120 * 0.1, alpha_affine=None, border_mode=0, value=(255, 255, 255), ),
+                    alb.ElasticTransform(
+                        p=1, alpha=50, sigma=120 * 0.1, alpha_affine=None, border_mode=0, value=(255, 255, 255), ),
                 ],
                 p=0.04,
             ),
