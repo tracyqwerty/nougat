@@ -87,10 +87,12 @@ def get_args():
     if args.checkpoint is None or not args.checkpoint.exists():
         args.checkpoint = get_checkpoint(args.checkpoint, model_tag=args.model)
     if args.out is None:
-        logging.warning("No output directory. Output will be printed to console.")
+        logging.warning(
+            "No output directory. Output will be printed to console.")
     else:
         if not args.out.exists():
-            logging.info("Output directory does not exist. Creating output directory.")
+            logging.info(
+                "Output directory does not exist. Creating output directory.")
             args.out.mkdir(parents=True)
         if not args.out.is_dir():
             logging.error("Output has to be directory.")
@@ -125,7 +127,8 @@ def get_args():
 def main():
     args = get_args()
     model = NougatModel.from_pretrained(args.checkpoint)
-    model = move_to_device(model, bf16=not args.full_precision, cuda=args.batchsize > 0)
+    model = move_to_device(
+        model, bf16=not args.full_precision, cuda=args.batchsize > 0)
     if args.batchsize <= 0:
         # set batch size to 1. Need to check if there are benefits for CPU conversion for >1
         args.batchsize = 1
@@ -175,14 +178,19 @@ def main():
                     % (datasets[file_index].name, datasets[file_index].size)
                 )
             page_num += 1
+
+            predictions.append(f"\n---\nPage {page_num}\n---\n")
+
             if output.strip() == "[MISSING_PAGE_POST]":
                 # uncaught repetitions -- most likely empty page
                 predictions.append(f"\n\n[MISSING_PAGE_EMPTY:{page_num}]\n\n")
             elif args.skipping and model_output["repeats"][j] is not None:
                 if model_output["repeats"][j] > 0:
                     # If we end up here, it means the output is most likely not complete and was truncated.
-                    logging.warning(f"Skipping page {page_num} due to repetitions.")
-                    predictions.append(f"\n\n[MISSING_PAGE_FAIL:{page_num}]\n\n")
+                    logging.warning(
+                        f"Skipping page {page_num} due to repetitions.")
+                    predictions.append(
+                        f"\n\n[MISSING_PAGE_FAIL:{page_num}]\n\n")
                 else:
                     # If we end up here, it means the document page is too different from the training domain.
                     # This can happen e.g. for cover pages.
@@ -197,7 +205,8 @@ def main():
                 out = "".join(predictions).strip()
                 out = re.sub(r"\n{3,}", "\n\n", out).strip()
                 if args.out:
-                    out_path = args.out / Path(is_last_page[j]).with_suffix(".mmd").name
+                    out_path = args.out / \
+                        Path(is_last_page[j]).with_suffix(".mmd").name
                     out_path.parent.mkdir(parents=True, exist_ok=True)
                     out_path.write_text(out, encoding="utf-8")
                 else:
